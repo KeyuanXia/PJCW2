@@ -18,5 +18,7 @@ int get_y_size(Node *first);
 
 Node *getPosition(Node *first, int x, int y);
 
+Node *creat_Node(int type);
+
 
 #endif //PJCWK2_ARRAY_H

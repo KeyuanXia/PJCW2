@@ -2,7 +2,7 @@
 // Created by kxia on 22-4-24.
 //
 #include <stdio.h>
-
+#include <stdlib.h>
 #include "Array.h"
 //the array's head is at the left of the left-top one node
 //so the first node is first->xnext
@@ -30,7 +30,7 @@ int get_y_size(Node *first){
 
 Node *getPosition(Node *first, int x, int y){
     Node *q;
-    int i,j;
+    int i;
     q=first->xnext;
     for(i=0;i<x;i++){
         if(q->xnext){
@@ -38,6 +38,7 @@ Node *getPosition(Node *first, int x, int y){
         }
         else{
             printf("\nOut of range\n");
+            return NULL;
         }
     }
     for(i=0;i<y;i++){
@@ -46,8 +47,14 @@ Node *getPosition(Node *first, int x, int y){
         }
         else{
             printf("\nOut of range\n");
+            return NULL;
         }
     }
     return q;
 }
 
+Node *creat_Node(int type){
+    Node *new=(Node*)malloc(sizeof (Node));
+    new->this=type;
+    return new;
+}
