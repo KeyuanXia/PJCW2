@@ -31,22 +31,20 @@ int get_y_size(Node *first){
 Node *getPosition(Node *first, int x, int y){
     Node *q;
     int i;
-    q=first->xnext;
-    for(i=0;i<x;i++){
-        if(q->xnext){
-            q=q->xnext;
-        }
-        else{
-            printf("\nOut of range\n");
-            return NULL;
-        }
-    }
+    q=first;
     for(i=0;i<y;i++){
         if(q->ynext){
             q=q->ynext;
         }
         else{
-            printf("\nOut of range\n");
+            return NULL;
+        }
+    }
+    for(i=0;i<=x;i++){
+        if(q->xnext){
+            q=q->xnext;
+        }
+        else{
             return NULL;
         }
     }
