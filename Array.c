@@ -6,11 +6,20 @@
 #include "Array.h"
 //the array's head is at the left of the left-top one node
 //so the first node is first->xnext
-int get_x_size(Node *first){
+int get_x_size(Node *first, int row){
     Node *q;
+    int i;
     int count = 0;
-    q=first->xnext;
-    while(q){
+    q=first;
+    for(i=0;i<row;i++){
+        if(!q->ynext){
+            return 0;
+        }
+        else{
+            q=q->ynext;
+        }
+    }
+    while(q->xnext){
         count++;
         q=q->xnext;
     }
@@ -19,9 +28,9 @@ int get_x_size(Node *first){
 
 int get_y_size(Node *first){
     Node *q;
-    int count = 0;
-    q=first->xnext;
-    while(q){
+    int count = 1;
+    q=first;
+    while(q->ynext){
         count++;
         q=q->ynext;
     }
@@ -49,6 +58,30 @@ Node *getPosition(Node *first, int x, int y){
         }
     }
     return q;
+}
+
+Node *copy_Grid(Node *last){
+    Node *row, *c, *nh, *nrow, *nc;
+    if(!last){
+        return NULL;
+    }
+    nh = creat_Node(-1);
+    nrow=nh;
+    row=last;
+    while(1){
+        row=row->ynext;
+        nc=creat_Node(row->this);
+        nrow->ynext=nc;
+        nc->ylast=nrow;
+        nrow=nrow->ynext;
+        if(row->ynext){
+            row=row->ynext;
+        }
+        else{
+            nrow->ynext=NULL;
+            break;
+        }
+    }
 }
 
 Node *creat_Node(int type){

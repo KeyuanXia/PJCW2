@@ -12,7 +12,7 @@ typedef struct field {
     struct field  *ynext;
 }Node;
 
-int get_x_size(Node *first);
+int get_x_size(Node *first, int row);
 
 int get_y_size(Node *first);
 
@@ -20,5 +20,5 @@ Node *getPosition(Node *first, int x, int y);
 
 Node *creat_Node(int type);
 
-
+Node *copy_Grid(Node *last);
 #endif //PJCWK2_ARRAY_H
