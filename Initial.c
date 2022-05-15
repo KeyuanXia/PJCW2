@@ -29,6 +29,7 @@ int load_Script(FILE *file, Node *head, double delay){
             else if(ch=='0'||ch=='1'){
                 this=creat_Node(atoi(ch));
                 last->xnext=this;
+                this->xlast=last;
             }
             else if(ch==','){}
             else if(ch=='\n'){
@@ -81,12 +82,15 @@ void clean_the_edge(Node *head){
         this=this->xnext;
     }
     this=head;
-    while(this->ynext){
-        this=this->ynext;
+    while(1){
+        this->xlast=NULL;
+        if(this->ynext){this=this->ynext;}
+        else{break;}
     }
-    while(this->xnext){
+    while(1){
         this->ynext=NULL;
-        this=this->xnext;
+        if(this->xnext){this=this->xnext;}
+        else{break;}
     }
 }
 

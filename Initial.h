@@ -8,5 +8,5 @@ int load_Script(FILE *file, Node *head, double delay);
 
 void clean_the_edge(Node *head);
 
-int free_all(Node* head)
+int free_all(Node* head);
 #endif //CHAPTER5_01_INITIAL_H
