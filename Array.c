@@ -3,7 +3,9 @@
 //
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "Array.h"
+#include "Initial.h"
 //the array's head is at the left of the left-top one node
 //so the first node is first->xnext
 int get_x_size(Node *first, int row){
@@ -41,6 +43,9 @@ Node *getPosition(Node *first, int x, int y){
     Node *q;
     int i;
     q=first;
+    if(x<0||y<0){
+        return NULL;
+    }
     for(i=0;i<y;i++){
         if(q->ynext){
             q=q->ynext;
@@ -61,27 +66,54 @@ Node *getPosition(Node *first, int x, int y){
 }
 
 Node *copy_Grid(Node *last){
-    Node *row, *c, *nh, *nrow, *nc;
+    Node *nh, *nrow, *lrow, *nc, *this, *n;
     if(!last){
         return NULL;
     }
     nh = creat_Node(-1);
     nrow=nh;
-    row=last;
+    lrow=last;
     while(1){
-        row=row->ynext;
-        nc=creat_Node(row->this);
-        nrow->ynext=nc;
-        nc->ylast=nrow;
-        nrow=nrow->ynext;
-        if(row->ynext){
-            row=row->ynext;
+        if(lrow->ynext){
+            nrow->this=-1;
+            nc = creat_Node(-1);
+            nrow->ynext=nc;
+            nc->ylast=nrow;
+            nrow=nc;
+            lrow=lrow->ynext;
         }
         else{
             nrow->ynext=NULL;
             break;
         }
     }
+    nrow=nh;
+    lrow=last;
+    this=lrow;
+    n=nrow;
+    while(1){
+        if(this->xnext){
+            nc = creat_Node(this->xnext->this);
+            n->xnext = nc;
+            nc->xlast = n;
+            n = nc;
+            this = this->xnext;
+        }
+        else{
+            n->xnext=NULL;
+            if(lrow->ynext){
+                lrow=lrow->ynext;
+                nrow=nrow->ynext;
+                n=nrow;
+                this=lrow;
+            }
+            else{
+                break;
+            }
+        }
+    }
+    clean_the_edge(nh);
+    return nh;
 }
 
 Node *creat_Node(int type){

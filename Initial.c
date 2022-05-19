@@ -91,9 +91,15 @@ int load_Script(FILE *file, Node *head, int *delay){
 void clean_the_edge(Node *head){
     Node *this;
     this=head;
-    while(this->xnext){
-        this->ylast=NULL;
-        this=this->xnext;
+    while(1){
+        if(this->xnext){
+            this->ylast=NULL;
+            this=this->xnext;
+        }
+        else{
+            this->ylast=NULL;
+            break;
+        }
     }
     this=head;
     while(1){
