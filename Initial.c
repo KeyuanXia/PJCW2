@@ -110,16 +110,20 @@ void clean_the_edge(Node *head){
 
 int free_all(Node* head){
     Node *row, *this, *next;
-    this = head;
     row = head;
-    while(row->ynext){
-        row=row->ynext;
-        while(this->xnext){
-            next=this->xnext;
-            free(this);
-            this=next;
-        }
-        free(this);
+    while(row){
         this=row;
+        row=row->ynext;
+        while(1){
+            if(this->xnext){
+                next=this->xnext;
+                free(this);
+                this=next;
+            }
+            else{
+                free(this);
+                break;
+            }
+        }
     }
 }
