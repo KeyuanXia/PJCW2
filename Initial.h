@@ -1,10 +1,13 @@
 //
-// Created by root on 22-5-7.
+// Created by keyuanxia on 22-5-7.
 //
 
 #ifndef CHAPTER5_01_INITIAL_H
 #define CHAPTER5_01_INITIAL_H
-int load_Script(FILE *file, Node *head, double delay);
+
+#include "Array.h"
+
+int load_Script(FILE *file, Node *head, int *delay);
 
 void clean_the_edge(Node *head);
 

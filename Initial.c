@@ -1,16 +1,17 @@
 //
-// Created by root on 22-5-7.
+// Created by keyuanxia on 22-5-7.
 //
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <bits/types/FILE.h>
-#include "Array.h"
+
 #include "Initial.h"
 
 //return 0 = initial failed
 //return -1 = empty file
-int load_Script(FILE *file, Node *head, double delay){
+int load_Script(FILE *file, Node *head, int *delay){
+    rewind(file);
     Node *last, *this;
     int i,j;
     char ch, buf[1024];
@@ -21,15 +22,26 @@ int load_Script(FILE *file, Node *head, double delay){
     else{
         last=head;
         j=0;
-        while((ch=fgetc(file))!=';'){
+        while(1){
+            ch= fgetc(file);
+            if(ch==';'){
+                break;
+            }
             if(ch==EOF){
                 printf("\nIllegal format\n");
                 return 0;
             }
-            else if(ch=='0'||ch=='1'){
-                this=creat_Node(atoi(ch));
+            else if(ch=='0'){
+                this=creat_Node(0);
                 last->xnext=this;
                 this->xlast=last;
+                last=this;
+            }
+            else if(ch=='1'){
+                this=creat_Node(1);
+                last->xnext=this;
+                this->xlast=last;
+                last=this;
             }
             else if(ch==','){}
             else if(ch=='\n'){
@@ -56,8 +68,10 @@ int load_Script(FILE *file, Node *head, double delay){
         //this is for getting the delay from the initial file
         fgetc(file);
         fgets(buf, sizeof(buf), file);
-        if(strspn(buf, "0123456789")==strlen(buf)){
-            delay= atoi(buf);
+        int m= strlen(buf);
+        int n=strspn(buf, "0123456789");
+        if(strspn(buf, "0123456789")==strlen(buf)-1){
+            *delay= atoi(buf);
         }
         else{
             printf("\nThe delay format did not meet the standard.\n");
