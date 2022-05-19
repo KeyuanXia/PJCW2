@@ -32,6 +32,7 @@ void clear_n(char *str){
 char *readChar(int length){
     char *input, *output;
     int tl;
+    getchar();
     fgets(input,length+1,stdin);
     clear_n(input);
     fflush(stdin);
@@ -45,13 +46,13 @@ char *readChar(int length){
 
 //this function just accept positive integer
 int readInt(int length){
-    char *input;
+    char *input=(char*)malloc((length+2)*sizeof(char));
     int output, tl;
-    fgets(input,20,stdin);
+    fgets(input,length+1,stdin);
     clear_n(input);
     fflush(stdin);
     tl=strlen(input);
-    if(tl<=0){
+    if(tl==0){
         return -1;
     }
     else if(tl>length){
@@ -78,10 +79,12 @@ char *CreateFolder(){
     return str;
 }
 
-void makeFilePath(char *time, int round){
-    char *str,*r, *temp="";
+char *makeFilePath(char *time, int round){
+    char *str, *r, *temp;
     str=(char *)malloc(100*sizeof(char));
-    sprintf(r,"%d",round);
+    temp=(char *)malloc(100*sizeof(char));
+    sprintf(temp,"");
+    sprintf(str,"%d",round);
     r=strdpp(str);
     free(str);
     strcat(temp,"./");
@@ -90,6 +93,7 @@ void makeFilePath(char *time, int round){
     strcat(temp,r);
     time=strdpp(temp);
     free(temp);
+    return time;
 }
 
 void storeGrid(FILE *filename, Node *first){
@@ -146,7 +150,7 @@ void printGrid(Node *first){
             }
         }
         if(!row->ynext){
-            printf(";");
+            printf(";\n");
             break;
         }
         else{
@@ -156,5 +160,24 @@ void printGrid(Node *first){
             }
         }
     }
-    exit(0);
+}
+
+int checkSame(Node *g1, Node *g2){
+    int x, y, xm, ym;
+    if(get_y_size(g1)!= get_y_size(g2)){
+        return 0;
+    }
+    ym = get_y_size(g1);
+    for(y=0;y<ym;y++){
+        if(get_x_size(g1,y)!= get_x_size(g2,y)){
+            return 0;
+        }
+        xm = get_x_size(g1,y);
+        for(x=0;x<xm;x++){
+            if(getPosition(g1,x,y)->this!= getPosition(g2,x,y)->this){
+                return 0;
+            }
+        }
+    }
+    return 1;
 }
