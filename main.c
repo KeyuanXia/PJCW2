@@ -4,11 +4,12 @@
 #include "Initial.h"
 #include "Array.h"
 #include "utility.h"
+#include "ViewDraw.h"
 #include <SDL2/SDL.h>
 
 int main() {
-    int num=-1, i, c;
-    char *string;
+    int num=-1, i;
+    char *string, ch;
     printf("********WELCOME********\n\n");
     printf("-------GAME TYPE-------\n");
     printf("|  1)INSERT FILE      |\n");
@@ -16,6 +17,7 @@ int main() {
     printf("==>choice:");
     while(1){
         num=readInt(1);
+        while((ch = getchar()) != '\n' && ch != EOF);
         if (num==-1){
             printf("Please enter a number at least.\n"
                    "==>choice:");
@@ -54,7 +56,7 @@ int main() {
                 if(load_Script(file, head, delay)==0){
                     printf("\nProgram End.\n");
                     fclose(file);
-                    free_all(head);
+                    return 0;
                 }
                 fclose(file);
                 printf("\nThen how many generations would you like to have?\n"
@@ -63,28 +65,7 @@ int main() {
                 while(1){
                     num=readInt(10);
                     if(num==-1){
-                        Node *present, *last, *temp;
-                        char *foldername,*filename;
-                        last = head;
-                        foldername=CreateFolder();
-                        while(1){
-                            c++;
-                            present=copy_Grid(last);
-                            printGrid(present);
-                            makeLife(last,present);
-                            temp=last;
-                            last=present;
-                            filename = makeFilePath(foldername,c);
-                            file = fopen(filename, "w");
-                            storeGrid(file, present);
-                            fclose(file);
-                            if(checkSame(temp, present)==1){
-                                free_all(temp);
-                                break;
-                            }else{
-                                free_all(temp);
-                            }
-                        }
+                        No_Limit(delay, head);
                         break;
                     }
                     else if(num==-2){

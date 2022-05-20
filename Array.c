@@ -28,6 +28,18 @@ int get_x_size(Node *first, int row){
     return count;
 }
 
+int get_x_max_size(Node *first){
+    int count, temp, i;
+    count = 0;
+    for(i=0;i< get_y_size(first);i++){
+        temp= get_x_size(first, i);
+        if(temp>count){
+            count=temp;
+        }
+    }
+    return count;
+}
+
 int get_y_size(Node *first){
     Node *q;
     int count = 1;

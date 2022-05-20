@@ -32,7 +32,6 @@ void clear_n(char *str){
 char *readChar(int length){
     char *input, *output;
     int tl;
-    getchar();
     fgets(input,length+1,stdin);
     clear_n(input);
     fflush(stdin);

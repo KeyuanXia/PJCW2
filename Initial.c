@@ -11,7 +11,6 @@
 //return 0 = initial failed
 //return -1 = empty file
 int load_Script(FILE *file, Node *head, int *delay){
-    rewind(file);
     Node *last, *this;
     int i,j;
     char ch, buf[1024];
@@ -44,7 +43,7 @@ int load_Script(FILE *file, Node *head, int *delay){
                 last=this;
             }
             else if(ch==','){}
-            else if(ch=='\n'){
+            else if(ch=='\n'||ch=='\r'){
                 j++;
                 last->xnext=NULL;
                 last=head;
@@ -115,6 +114,10 @@ void clean_the_edge(Node *head){
 }
 
 int free_all(Node* head){
+    if(!head->xnext&&!head->ynext){
+        free(head);
+        return 0;
+    }
     Node *row, *this, *next;
     row = head;
     while(row){
