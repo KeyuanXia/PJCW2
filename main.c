@@ -17,7 +17,7 @@ int main() {
     printf("==>choice:");
     while(1){
         num=readInt(1);
-        while((ch = getchar()) != '\n' && ch != EOF);
+        while((ch = getchar()) != '\n' && ch != EOF && ch != NULL);
         if (num==-1){
             printf("Please enter a number at least.\n"
                    "==>choice:");
@@ -55,7 +55,8 @@ int main() {
                 int *delay=(int *)malloc(sizeof(int));
                 if(load_Script(file, head, delay)==0){
                     printf("\nProgram End.\n");
-                    fclose(file);
+                    if(file)
+                        fclose(file);
                     return 0;
                 }
                 fclose(file);
@@ -77,23 +78,7 @@ int main() {
                                "==>number:");
                     }
                     else{
-                        Node *present, *last, *temp;
-                        char *foldername,*filename;
-                        last = head;
-                        foldername=CreateFolder();
-                        for(i=0;i<num;i++){
-                            present=copy_Grid(last);
-                            printGrid(present);
-                            makeLife(last,present);
-                            temp=last;
-                            last=present;
-                            present=NULL;
-                            free_all(temp);
-                            filename = makeFilePath(foldername,i+1);
-                            file = fopen(filename, "w");
-                            storeGrid(file, last);
-                            fclose(file);
-                        }
+                        Limit(delay, head, num);
                         break;
                     }
                 }
@@ -103,7 +88,98 @@ int main() {
     }
     //NEED SDL TO LET USER POINT
     else if(num == 2){
-
+        int xnum, ynum;
+        printf("So how many rows would you like to have?\n"
+               "==>choice(1~200):");
+        while(1){
+            num=readInt(200);
+            if (num==-1){
+                printf("Please enter a number at least.\n"
+                       "==>choice(0~200):");
+            }
+            else if (num==-2){
+                printf("Please don't enter too large number.\n"
+                       "==>choice(0~200):");
+            }
+            else if (num==-3){
+                printf("Please don't enter any symbol except number.\n"
+                       "==>choice(0~200):");
+            }
+            else{
+                break;
+            }
+        }
+        ynum = num;
+        printf("So how many columns would you like to have?\n"
+               "==>choice(1~200):");
+        while(1){
+            num=readInt(200);
+            if (num==-1){
+                printf("Please enter a number at least.\n"
+                       "==>choice(0~200):");
+            }
+            else if (num==-2){
+                printf("Please don't enter too large number.\n"
+                       "==>choice(0~200):");
+            }
+            else if (num==-3){
+                printf("Please don't enter any symbol except number.\n"
+                       "==>choice(0~200):");
+            }
+            else{
+                break;
+            }
+        }
+        xnum = num;
+        Node *head;
+        head = Customer(xnum, ynum);
+        printf("Additionally, how long delay would you like to have?\n"
+               "Don't worry, this can be changed during the game.\n"
+               "==>choice:");
+        while(1){
+            num=readInt(100);
+            if (num==-1){
+                printf("Please enter a number at least.\n"
+                       "==>choice:");
+            }
+            else if (num==-2){
+                printf("Please don't enter too large number.\n"
+                       "==>choice:");
+            }
+            else if (num==-3){
+                printf("Please don't enter any symbol except number.\n"
+                       "==>choice:");
+            }
+            else{
+                break;
+            }
+        }
+        int *delay;
+        delay=(int *)malloc(sizeof (int));
+        *delay=num;
+        printf("The last, how many times would you like to evolute this grid?\n"
+               "You can type in nothing to make evolution until no change.\n"
+               "==>choice:");
+        while(1){
+            num=readInt(100);
+            if (num==-1){
+                No_Limit(delay, head);
+                break;
+            }
+            else if (num==-2){
+                printf("Please don't enter too large number.\n"
+                       "==>choice:");
+            }
+            else if (num==-3){
+                printf("Please don't enter any symbol except number.\n"
+                       "==>choice:");
+            }
+            else{
+                Limit(delay, head, num);
+                break;
+            }
+        }
+        free(delay);
     }
     exit(0);
 }

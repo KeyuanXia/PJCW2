@@ -49,7 +49,6 @@ int readInt(int length){
     int output, tl;
     fgets(input,length+1,stdin);
     clear_n(input);
-    fflush(stdin);
     tl=strlen(input);
     if(tl==0){
         return -1;

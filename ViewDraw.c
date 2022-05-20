@@ -156,8 +156,14 @@ int No_Limit(int *delay, Node *head)
                         } else {
                             state = 1;
                             once = false;
-                            SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 0, 0));
-                            SDL_UpdateWindowSurface(window);
+                            if(end==false) {
+                                SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 0, 0));
+                                SDL_UpdateWindowSurface(window);
+                            }
+                            else{
+                                SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0, 255, 0));
+                                SDL_UpdateWindowSurface(window);
+                            }
                             print_Grid(present, &rect, renderer);
                         }
                     }
@@ -200,11 +206,13 @@ int No_Limit(int *delay, Node *head)
             once=true;
         }
     }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     return 0;
 }
 
 
-int Limit(int *delay, Node *head)
+int Limit(int *delay, Node *head, int times)
 {
     bool quit=false, end=false;
     //initial of makelife
@@ -215,7 +223,7 @@ int Limit(int *delay, Node *head)
     foldername=CreateFolder();
 
     //Initial SDL part
-    int c, i, j;
+    int c, i, j=0;
     SDL_Window* window = NULL;
     SDL_Surface* screenSurface = NULL;
     SDL_Renderer* renderer;
@@ -279,8 +287,14 @@ int Limit(int *delay, Node *head)
                         } else {
                             state = 1;
                             once = false;
-                            SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 0, 0));
-                            SDL_UpdateWindowSurface(window);
+                            if(end==false) {
+                                SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 0, 0));
+                                SDL_UpdateWindowSurface(window);
+                            }
+                            else{
+                                SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0, 255, 0));
+                                SDL_UpdateWindowSurface(window);
+                            }
                             print_Grid(present, &rect, renderer);
                         }
                     }
@@ -292,7 +306,7 @@ int Limit(int *delay, Node *head)
                     break;
             }
         }
-        if(state==1) {
+        if(state==1 && end==false) {
             present = copy_Grid(last);
             print_Grid(present, &rect, renderer);
             makeLife(last, present);
@@ -304,15 +318,19 @@ int Limit(int *delay, Node *head)
             storeGrid(file, present);
             fclose(file);
             //end of store
-            if (checkSame(temp, present) == 1 && end == false) {
+            if (end == false && j==times) {
+                j++;
                 free_all(temp);
                 SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0, 255, 0));
                 SDL_UpdateWindowSurface(window);
                 print_Grid(present, &rect, renderer);
                 end = true;
-            } else if (checkSame(temp, present) == 0) {
+                SDL_Delay(*delay);
+            } else if (end == false && j<times) {
+                j++;
                 print_Grid(present, &rect, renderer);
                 free_all(temp);
+                SDL_Delay(*delay);
             }
         }
         else if(state==0 && once == false){
@@ -321,9 +339,112 @@ int Limit(int *delay, Node *head)
             print_Grid(present, &rect, renderer);
             once=true;
         }
-        SDL_Delay(*delay);
     }
-
-
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     return 0;
+}
+
+Node *Customer(int xnum, int ynum)
+{
+    //Initial SDL part
+    int c, i, j=0;
+    SDL_Window* window = NULL;
+    SDL_Surface* screenSurface = NULL;
+    SDL_Renderer* renderer;
+    SDL_Rect rect;
+    SDL_Event e;
+
+    if (SDL_Init(SDL_INIT_VIDEO) < 0)
+    {
+        exit(-1);
+    }
+    bool quit=false, end=false;
+    //initial the head pointer
+    Node *head;
+    head = create_Grid(xnum,ynum);
+    if(xnum>ynum){
+        rect.w=1000/xnum-2;
+        rect.h=rect.w;
+        window = SDL_CreateWindow("GAME OF LIFE", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000,
+                                  (rect.h+2)*ynum, SDL_WINDOW_SHOWN);
+        if (NULL == window)
+        {
+            SDL_Quit();
+            return NULL;
+        }
+    }
+    else{
+        rect.w=1000/ynum-2;
+        rect.h=rect.w;
+        window = SDL_CreateWindow("GAME OF LIFE", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                                  (rect.w+2)*xnum,1000, SDL_WINDOW_SHOWN);
+        if (NULL == window)
+        {
+            SDL_Quit();
+            return NULL;
+        }
+    }
+    //create background
+    screenSurface = SDL_GetWindowSurface(window);
+    SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 255, 255));
+    SDL_UpdateWindowSurface(window);
+    //create renderer
+    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
+    //End of SDL initial
+    int x, y, count=0;
+    x=0;
+    y=0;
+    Node *tempn, *tempn2;
+    bool pressed=false;
+    tempn2=NULL;
+    //draw the window for user pointing
+    while(!quit) {
+        print_Grid(head, &rect, renderer);
+        while(SDL_PollEvent(&e)) {
+            if (e.type == SDL_MOUSEBUTTONDOWN) {
+                x = e.motion.x;
+                y = e.motion.y;
+                tempn = getPosition(head, x / (rect.w + 2), y / (rect.w + 2));
+                if (tempn->this == 0) {
+                    tempn->this = 1;
+                    print_Grid(head, &rect, renderer);
+                } else if (tempn->this == 1) {
+                    tempn->this = 0;
+                    print_Grid(head, &rect, renderer);
+                }
+                tempn2=tempn;
+                pressed=true;
+            }
+            else if(e.type==SDL_MOUSEBUTTONUP){
+                pressed=false;
+            }
+            else if(e.type==SDL_MOUSEMOTION && pressed==true){
+                x = e.motion.x;
+                y = e.motion.y;
+                tempn = getPosition(head, x / (rect.w + 2), y / (rect.w + 2));
+                if(tempn!=tempn2) {
+                    if (tempn->this == 0) {
+                        tempn->this = 1;
+                        print_Grid(head, &rect, renderer);
+                    } else if (tempn->this == 1) {
+                        tempn->this = 0;
+                        print_Grid(head, &rect, renderer);
+                    }
+                }
+                tempn2=tempn;
+            }
+            else if(e.type==SDL_QUIT) {
+                tempn=NULL;
+                tempn2=NULL;
+                quit = true;
+                break;
+            }
+
+        }
+
+    }
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    return head;
 }

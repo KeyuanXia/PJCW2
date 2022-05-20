@@ -23,4 +23,6 @@ Node *getPosition(Node *first, int x, int y);
 Node *creat_Node(int type);
 
 Node *copy_Grid(Node *last);
+
+Node *create_Grid(int xnum, int ynum);
 #endif //PJCWK2_ARRAY_H

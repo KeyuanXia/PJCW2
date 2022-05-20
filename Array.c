@@ -42,11 +42,14 @@ int get_x_max_size(Node *first){
 
 int get_y_size(Node *first){
     Node *q;
-    int count = 1;
+    int count = 0;
     q=first;
-    while(q->ynext){
+    while(1){
         count++;
-        q=q->ynext;
+        if(q->ynext)
+            q=q->ynext;
+        else
+            break;
     }
     return count;
 }
@@ -132,4 +135,33 @@ Node *creat_Node(int type){
     Node *new=(Node*)malloc(sizeof (Node));
     new->this=type;
     return new;
+}
+
+Node *create_Grid(int xnum, int ynum){
+    Node *head, *n, *row, *c;
+    head= creat_Node(-1);
+    row=head;
+    int i, j;
+    for (j=1;j<ynum;j++){
+        n = creat_Node(0);
+        row->ynext=n;
+        n->ylast=row;
+        row=n;
+    }
+    row->ynext=NULL;
+    row=head;
+    c=row;
+    for(j=0;j<ynum;j++){
+        for(i=0;i<xnum;i++){
+            n= creat_Node(0);
+            c->xnext=n;
+            n->xlast=c;
+            c=n;
+        }
+        c->xnext=NULL;
+        row=row->ynext;
+        c=row;
+    }
+    clean_the_edge(head);
+    return head;
 }
