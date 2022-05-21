@@ -52,10 +52,9 @@ int main() {
                 Node *head = creat_Node(-1);
                 int *delay = (int *) malloc(sizeof(int));
                 if (load_Script(file, head, delay) == 0) {
-                    printf("\nProgram End.\n");
                     if (file)
                         fclose(file);
-                    return 0;
+                    break;
                 }
                 fclose(file);
                 printf("\nThen how many generations would you like to have?\n"

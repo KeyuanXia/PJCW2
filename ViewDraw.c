@@ -177,14 +177,24 @@ int No_Limit(int *delay, Node *head)
                     break;
             }
         }
-        if(end==false){
+        if(state==0){
+            printf("\r\033[k");
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|  PAUSE   |", d, generation);
+            fflush(stdout);
+        }
+        else if(end==false && state==1){
             printf("\r\033[k");
             printf("\r\033[k");
-            printf("|      DELAY:%-10d|        GENERATION:%-10d|", d, generation);
+            printf("|      DELAY:%-10d|        GENERATION:%-10d| EVOLVING |", d, generation);
+            fflush(stdout);
+        }
+        else if(end==true){
+            printf("\r\033[k");
+            printf("\r\033[k");
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|  FINISH  |", d, generation);
             fflush(stdout);
         }
         if(state==1) {
-            generation++;
             present = copy_Grid(last);
             print_Grid(present, &rect, renderer);
             makeLife(last, present);
@@ -192,6 +202,7 @@ int No_Limit(int *delay, Node *head)
             last = present;
             //store life record
             if(end==false){
+                generation++;
                 filename = makeFilePath(foldername, generation);
                 file = fopen(filename, "w");
                 storeGrid(file, present, d);
@@ -199,6 +210,7 @@ int No_Limit(int *delay, Node *head)
             }
             //end of store
             if (checkSame(temp, present) == 1 && end == false) {
+                generation--;
                 free_all(temp);
                 SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0, 255, 0));
                 SDL_UpdateWindowSurface(window);
@@ -328,15 +340,40 @@ int Limit(int *delay, Node *head, int times)
                     break;
             }
         }
-        if(end==false){
+        if(state==0){
+            printf("\r\033[k");
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|  PAUSE   |", d, generation);
+            fflush(stdout);
+        }
+        else if(end==false && state==1){
             printf("\r\033[k");
             printf("\r\033[k");
-            printf("|      DELAY:%-10d|        GENERATION:%-10d|", d, generation);
+            printf("|      DELAY:%-10d|        GENERATION:%-10d| EVOLVING |", d, generation);
+            fflush(stdout);
+        }
+        else if(end==true){
+            printf("\r\033[k");
+            printf("\r\033[k");
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|  FINISH  |", d, generation);
+            fflush(stdout);
+        }if(state==0){
+            printf("\r\033[k");
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|  PAUSE   |", d, generation);
+            fflush(stdout);
+        }
+        else if(end==false && state==1){
+            printf("\r\033[k");
+            printf("\r\033[k");
+            printf("|      DELAY:%-10d|        GENERATION:%-10d| EVOLVING |", d, generation);
+            fflush(stdout);
+        }
+        else if(end==true){
+            printf("\r\033[k");
+            printf("\r\033[k");
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|  FINISH  |", d, generation);
             fflush(stdout);
         }
         if(state==1 && end==false) {
-            generation++;
-
             present = copy_Grid(last);
             print_Grid(present, &rect, renderer);
             makeLife(last, present);
@@ -344,6 +381,7 @@ int Limit(int *delay, Node *head, int times)
             last = present;
             //store life record
             if(end==false){
+                generation++;
                 filename = makeFilePath(foldername, generation);
                 file = fopen(filename, "w");
                 storeGrid(file, present, d);
@@ -351,6 +389,7 @@ int Limit(int *delay, Node *head, int times)
             }
             //end of store
             if (end == false && j==times) {
+                generation--;
                 j++;
                 free_all(temp);
                 SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0, 255, 0));
