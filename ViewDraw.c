@@ -3,7 +3,6 @@
 //
 #include <stdio.h>
 #include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 
 #include "ViewDraw.h"
@@ -31,11 +30,6 @@ int get_Height(Node *first){
     return get_y_size(first);
 }
 
-void rect_Size(SDL_Rect *rect, int w, int h){
-    rect->w=w;
-    rect->h=h;
-}
-
 void draw_White(SDL_Renderer *renderer, SDL_Rect *rect, int x, int y){
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);
     rect->x=x;
@@ -53,7 +47,6 @@ void draw_Black(SDL_Renderer *renderer, SDL_Rect *rect, int x, int y){
 }
 
 int get_rect_size(SDL_Rect *rect, Node *first){
-    int t;
     if(get_Height(first)<=get_Width(first)){
         rect->w=1000/ get_Width(first)-2;
         rect->h=1000/ get_Width(first)-2;
@@ -351,12 +344,12 @@ int Limit(int *delay, Node *head, int times)
                 SDL_UpdateWindowSurface(window);
                 print_Grid(present, &rect, renderer);
                 end = true;
-                SDL_Delay(*delay);
+                SDL_Delay(d);
             } else if (end == false && j<times) {
                 j++;
                 print_Grid(present, &rect, renderer);
                 free_all(temp);
-                SDL_Delay(*delay);
+                SDL_Delay(d);
             }
         }
         else if(state==0 && once == false){
@@ -384,7 +377,7 @@ Node *Customer(int xnum, int ynum)
     {
         exit(-1);
     }
-    bool quit=false, end=false;
+    bool quit=false;
     //initial the head pointer
     Node *head;
     head = create_Grid(xnum,ynum);
@@ -417,7 +410,7 @@ Node *Customer(int xnum, int ynum)
     //create renderer
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     //End of SDL initial
-    int x, y, count=0;
+    int x, y;
     x=0;
     y=0;
     Node *tempn, *tempn2;
