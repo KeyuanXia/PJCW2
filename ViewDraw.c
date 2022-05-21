@@ -138,11 +138,17 @@ int No_Limit(int *delay, Node *head)
             switch (e.type) {
                 case SDL_KEYDOWN:
                     i = e.key.keysym.sym;
-                    if (i==SDLK_DOWN || i==SDLK_LEFT) {
-                        if(d>100){
-                            d -= 100;}
-                    } else if (i==SDLK_RIGHT || i==SDLK_UP) {
-                        d += 100;
+                    if (i==SDLK_DOWN) {
+                        if(d>100){d -= 100;}
+                    }
+                    else if (i==SDLK_UP) {
+                        if(d<=4900){d += 100;}
+                    }
+                    else if (i==SDLK_LEFT){
+                        if(d>10){d -= 10;}
+                    }
+                    else if (i==SDLK_RIGHT) {
+                        if(d<4990){d += 10;}
                     }
                     //pause
                     else if (i==SDLK_p) {
@@ -283,10 +289,17 @@ int Limit(int *delay, Node *head, int times)
             switch (e.type) {
                 case SDL_KEYDOWN:
                     i = e.key.keysym.sym;
-                    if (i==SDLK_DOWN || i==SDLK_LEFT) {
+                    if (i==SDLK_DOWN) {
                         if(d>100){d -= 100;}
-                    } else if (i==SDLK_RIGHT || i==SDLK_UP) {
-                        d += 100;
+                    }
+                    else if (i==SDLK_UP) {
+                        if(d<=4900){d += 100;}
+                    }
+                    else if (i==SDLK_LEFT){
+                        if(d>10){d -= 10;}
+                    }
+                    else if (i==SDLK_RIGHT) {
+                        if(d<4990){d += 10;}
                     }
                     //pause
                     else if (i==SDLK_p) {
