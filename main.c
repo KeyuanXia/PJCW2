@@ -1,6 +1,5 @@
 #include <stdio.h>
 
-#include "MakeLife.h"
 #include "Initial.h"
 #include "Array.h"
 #include "utility.h"

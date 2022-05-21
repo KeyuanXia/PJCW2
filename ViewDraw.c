@@ -178,13 +178,13 @@ int No_Limit(int *delay, Node *head)
                     break;
             }
         }
+        if(end==false){
+            printf("\r\033[k");
+            printf("\r\033[k");
+            printf("|       DELAY:%d|  GENERATION:%d", d, generation);
+            fflush(stdout);
+        }
         if(state==1) {
-            if(end==false){
-                printf("\r\033[k");
-                printf("\r\033[k");
-                printf("|       DELAY:%d|  GENERATION:%d", d, generation);
-                fflush(stdout);
-            }
             generation++;
             present = copy_Grid(last);
             print_Grid(present, &rect, renderer);
@@ -322,13 +322,13 @@ int Limit(int *delay, Node *head, int times)
                     break;
             }
         }
+        if(end==false){
+            printf("\r\033[k");
+            printf("\r\033[k");
+            printf("|       DELAY:%d|  GENERATION:%d", d, generation);
+            fflush(stdout);
+        }
         if(state==1 && end==false) {
-            if(end==false){
-                printf("\r\033[k");
-                printf("\r\033[k");
-                printf("|       DELAY:%d|  GENERATION:%d", d, generation);
-                fflush(stdout);
-            }
             generation++;
 
             present = copy_Grid(last);
