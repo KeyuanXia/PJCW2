@@ -174,7 +174,7 @@ int No_Limit(int *delay, Node *head)
         if(end==false){
             printf("\r\033[k");
             printf("\r\033[k");
-            printf("|       DELAY:%d|  GENERATION:%d", d, generation);
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|", d, generation);
             fflush(stdout);
         }
         if(state==1) {
@@ -318,7 +318,7 @@ int Limit(int *delay, Node *head, int times)
         if(end==false){
             printf("\r\033[k");
             printf("\r\033[k");
-            printf("|       DELAY:%d|  GENERATION:%d", d, generation);
+            printf("|      DELAY:%-10d|        GENERATION:%-10d|", d, generation);
             fflush(stdout);
         }
         if(state==1 && end==false) {
