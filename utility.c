@@ -108,7 +108,7 @@ char *makeFilePath(char *time, int round){
     char *str, *r, *temp;
     str=(char *)malloc(100*sizeof(char));
     temp=(char *)malloc(100*sizeof(char));
-    sprintf(temp,"");
+    strcpy(temp,"");
     sprintf(str,"%d",round);
     r=strdpp(str);
     free(str);
