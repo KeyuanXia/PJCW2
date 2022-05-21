@@ -29,6 +29,30 @@ void clear_n(char *str){
     }
 }
 
+void clear_s(char *str){
+        char *str_c=str;
+        int i,j=0;
+        for(i=0;str[i]!='\0';i++)
+        {
+            if(str[i]!=' ')
+                str_c[j++]=str[i];
+        }
+        str_c[j]='\0';
+        str=str_c;
+}
+
+void clear_m(char *str){
+    char *str_c=str;
+    int i,j=0;
+    for(i=0;str[i]!='\0';i++)
+    {
+        if(str[i]!=':' && !(str[i]>=65 && str[i]<=90) && !(str[i]>=97 && str[i]<=122))
+            str_c[j++]=str[i];
+    }
+    str_c[j]='\0';
+    str=str_c;
+}
+
 char *readChar(int length){
     char *input, *output;
     int tl;
@@ -45,9 +69,9 @@ char *readChar(int length){
 
 //this function just accept positive integer
 int readInt(int length){
-    char *input=(char*)malloc((length+2)*sizeof(char));
+    char *input=(char*)malloc((length+100)*sizeof(char));
     int output, tl;
-    fgets(input,length+1,stdin);
+    fgets(input,length+99,stdin);
     clear_n(input);
     tl=strlen(input);
     if(tl==0){
@@ -70,6 +94,9 @@ char *CreateFolder(){
     time_t t;
     time(&t);
     char *str=ctime(&t);
+    clear_n(str);
+    clear_s(str);
+    clear_m(str);
     if (access(str, 0) == -1)
     {
         mkdir(str,0777);
@@ -94,28 +121,35 @@ char *makeFilePath(char *time, int round){
     return time;
 }
 
-void storeGrid(FILE *filename, Node *first){
+void storeGrid(FILE *filename, Node *first, int delay){
     Node *row, *c;
     if(first==NULL){
         printf("In storeGrid, first is NULL");
         exit(-1);
+    }
+    if(filename==NULL){
+        printf("Open file failed\n");
+        exit(11);
     }
     row=first;
     c=first->xnext;
     while(1){
         while(1){
             fprintf(filename, "%i", c->this);
-            if(!c->xnext){
+            if(!c->xnext && row->ynext){
                 fprintf(filename,"\n");
                 break;
             }
-            else{
+            else if(c->xnext){
                 fprintf(filename, ",");
                 c=c->xnext;
+            } else{
+                break;
             }
         }
         if(!row->ynext){
-            fprintf(filename,";");
+            fprintf(filename,";\n");
+            fprintf(filename, "%d", delay);
             break;
         }
         else{

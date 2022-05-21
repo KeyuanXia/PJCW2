@@ -7,13 +7,14 @@
 #include <bits/types/FILE.h>
 
 #include "Initial.h"
+#include "utility.h"
 
 //return 0 = initial failed
 //return -1 = empty file
 int load_Script(FILE *file, Node *head, int *delay){
     Node *last, *this;
     int i,j;
-    char ch, buf[1024];
+    char ch, buf[1024], *temp;
     if(!file){
         printf("\nThe source file does not exist.\n");
         return 0;
@@ -67,10 +68,11 @@ int load_Script(FILE *file, Node *head, int *delay){
         //this is for getting the delay from the initial file
         fgetc(file);
         fgets(buf, sizeof(buf), file);
-        int m= strlen(buf);
-        int n=strspn(buf, "0123456789");
-        if(strspn(buf, "0123456789")==strlen(buf)-1){
-            *delay= atoi(buf);
+        temp= strdpp(buf);
+        clear_n(temp);
+        if(strspn(temp, "0123456789")==strlen(temp)){
+            *delay= atoi(temp);
+            free(temp);
         }
         else{
             printf("\nThe delay format did not meet the standard.\n");

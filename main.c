@@ -17,13 +17,12 @@ int main() {
     printf("==>choice:");
     while(1){
         num=readInt(1);
-        while((ch = getchar()) != '\n' && ch != EOF && ch != NULL);
         if (num==-1){
             printf("Please enter a number at least.\n"
                    "==>choice:");
         }
         else if (num==-2){
-            printf("Please just enter one positive number.\n"
+            printf("Please just enter one positive integer.\n"
                    "==>choice:");
         }
         else if (num==-3){
@@ -95,15 +94,23 @@ int main() {
             num=readInt(200);
             if (num==-1){
                 printf("Please enter a number at least.\n"
-                       "==>choice(0~200):");
+                       "==>choice(1~200):");
             }
             else if (num==-2){
                 printf("Please don't enter too large number.\n"
-                       "==>choice(0~200):");
+                       "==>choice(1~200):");
             }
             else if (num==-3){
                 printf("Please don't enter any symbol except number.\n"
-                       "==>choice(0~200):");
+                       "==>choice(1~200):");
+            }
+            else if(num==0){
+                printf("Please don't use 0 as height.\n"
+                       "==>choice(1~200):");
+            }
+            else if(num>200){
+                printf("Please don't enter too large number.\n"
+                       "==>choice(1~200):");
             }
             else{
                 break;
@@ -116,15 +123,23 @@ int main() {
             num=readInt(200);
             if (num==-1){
                 printf("Please enter a number at least.\n"
-                       "==>choice(0~200):");
+                       "==>choice(1~200):");
             }
             else if (num==-2){
                 printf("Please don't enter too large number.\n"
-                       "==>choice(0~200):");
+                       "==>choice(1~200):");
             }
             else if (num==-3){
                 printf("Please don't enter any symbol except number.\n"
-                       "==>choice(0~200):");
+                       "==>choice(1~200):");
+            }
+            else if(num==0){
+                printf("Please don't use 0 as width.\n"
+                       "==>choice(1~200):");
+            }
+            else if(num>200){
+                printf("Please don't enter too large number.\n"
+                       "==>choice(1~200):");
             }
             else{
                 break;

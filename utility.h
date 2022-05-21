@@ -16,9 +16,15 @@ void printGrid(Node *first);
 
 int checkSame(Node *g1, Node *g2);
 
+void clear_n(char *str);
+
+void clear_s(char *str);
+
+void clear_m(char *str);
+
 char *CreateFolder();
 
 char *makeFilePath(char *time, int round);
 
-void storeGrid(FILE *filename, Node *first);
+void storeGrid(FILE *filename, Node *first, int delay);
 #endif //CHAPTER5_01_UTILITY_H

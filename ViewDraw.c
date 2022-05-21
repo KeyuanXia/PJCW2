@@ -3,6 +3,7 @@
 //
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <stdbool.h>
 
 #include "ViewDraw.h"
@@ -92,10 +93,10 @@ int No_Limit(int *delay, Node *head)
     foldername=CreateFolder();
 
     //Initial SDL part
-    int c, i, j;
-    SDL_Window* window = NULL;
-    SDL_Surface* screenSurface = NULL;
-    SDL_Renderer* renderer;
+    int i;
+    SDL_Window *window = NULL;
+    SDL_Surface *screenSurface = NULL;
+    SDL_Renderer *renderer;
     SDL_Rect rect;
     SDL_Event e;
 
@@ -103,7 +104,6 @@ int No_Limit(int *delay, Node *head)
     {
         exit(-1);
     }
-
     //Start of create Window dynamicly
     int which;
     which=get_rect_size(&rect, head);
@@ -128,7 +128,6 @@ int No_Limit(int *delay, Node *head)
     }
     //End of create Window
 
-
     //create background
     screenSurface = SDL_GetWindowSurface(window);
     SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 0, 0));
@@ -137,25 +136,29 @@ int No_Limit(int *delay, Node *head)
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     //End of SDL initial
 
-    int state=1;
+    int state=1, d, generation=0;
     bool once=false;
+    d=*delay;
     while(!quit) {
+        //change delay and pause
         while(SDL_PollEvent(&e)) {
             switch (e.type) {
                 case SDL_KEYDOWN:
                     i = e.key.keysym.sym;
                     if (i==SDLK_DOWN || i==SDLK_LEFT) {
-                        if (*delay > 200) {
-                            *delay -= 100;
-                        }
+                        if(d>100){
+                            d -= 100;}
                     } else if (i==SDLK_RIGHT || i==SDLK_UP) {
-                        *delay += 100;
-                    } else if (i==SDLK_p) {
+                        d += 100;
+                    }
+                    //pause
+                    else if (i==SDLK_p) {
                         if (state == 1) {
                             state = 0;
                         } else {
                             state = 1;
                             once = false;
+                            //judge whether end, if end change surface to green when cancel pause or red
                             if(end==false) {
                                 SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 0, 0));
                                 SDL_UpdateWindowSurface(window);
@@ -176,16 +179,25 @@ int No_Limit(int *delay, Node *head)
             }
         }
         if(state==1) {
+            if(end==false){
+                printf("\r\033[k");
+                printf("\r\033[k");
+                printf("|       DELAY:%d|  GENERATION:%d", d, generation);
+                fflush(stdout);
+            }
+            generation++;
             present = copy_Grid(last);
             print_Grid(present, &rect, renderer);
             makeLife(last, present);
             temp = last;
             last = present;
             //store life record
-            filename = makeFilePath(foldername, c);
-            file = fopen(filename, "w");
-            storeGrid(file, present);
-            fclose(file);
+            if(end==false){
+                filename = makeFilePath(foldername, generation);
+                file = fopen(filename, "w");
+                storeGrid(file, present, d);
+                fclose(file);
+            }
             //end of store
             if (checkSame(temp, present) == 1 && end == false) {
                 free_all(temp);
@@ -196,7 +208,7 @@ int No_Limit(int *delay, Node *head)
             } else if (checkSame(temp, present) == 0) {
                 print_Grid(present, &rect, renderer);
                 free_all(temp);
-                SDL_Delay(*delay);
+                SDL_Delay(d);
             }
         }
         else if(state==0 && once == false){
@@ -223,7 +235,7 @@ int Limit(int *delay, Node *head, int times)
     foldername=CreateFolder();
 
     //Initial SDL part
-    int c, i, j=0;
+    int i, j=0;
     SDL_Window* window = NULL;
     SDL_Surface* screenSurface = NULL;
     SDL_Renderer* renderer;
@@ -268,25 +280,29 @@ int Limit(int *delay, Node *head, int times)
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_SOFTWARE);
     //End of SDL initial
 
-    int state=1;
+    int state=1, d, generation=0;
     bool once=false;
+    d=*delay;
     while(!quit) {
+
+        //change delay and
         while(SDL_PollEvent(&e)) {
             switch (e.type) {
                 case SDL_KEYDOWN:
                     i = e.key.keysym.sym;
                     if (i==SDLK_DOWN || i==SDLK_LEFT) {
-                        if (*delay > 200) {
-                            *delay -= 100;
-                        }
+                        if(d>100){d -= 100;}
                     } else if (i==SDLK_RIGHT || i==SDLK_UP) {
-                        *delay += 100;
-                    } else if (i==SDLK_p) {
+                        d += 100;
+                    }
+                    //pause
+                    else if (i==SDLK_p) {
                         if (state == 1) {
                             state = 0;
                         } else {
                             state = 1;
                             once = false;
+                            //judge whether end, if end change surface to green when cancel pause or red
                             if(end==false) {
                                 SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 255, 0, 0));
                                 SDL_UpdateWindowSurface(window);
@@ -307,16 +323,26 @@ int Limit(int *delay, Node *head, int times)
             }
         }
         if(state==1 && end==false) {
+            if(end==false){
+                printf("\r\033[k");
+                printf("\r\033[k");
+                printf("|       DELAY:%d|  GENERATION:%d", d, generation);
+                fflush(stdout);
+            }
+            generation++;
+
             present = copy_Grid(last);
             print_Grid(present, &rect, renderer);
             makeLife(last, present);
             temp = last;
             last = present;
             //store life record
-            filename = makeFilePath(foldername, c);
-            file = fopen(filename, "w");
-            storeGrid(file, present);
-            fclose(file);
+            if(end==false){
+                filename = makeFilePath(foldername, generation);
+                file = fopen(filename, "w");
+                storeGrid(file, present, d);
+                fclose(file);
+            }
             //end of store
             if (end == false && j==times) {
                 j++;
@@ -348,7 +374,6 @@ int Limit(int *delay, Node *head, int times)
 Node *Customer(int xnum, int ynum)
 {
     //Initial SDL part
-    int c, i, j=0;
     SDL_Window* window = NULL;
     SDL_Surface* screenSurface = NULL;
     SDL_Renderer* renderer;
@@ -366,7 +391,7 @@ Node *Customer(int xnum, int ynum)
     if(xnum>ynum){
         rect.w=1000/xnum-2;
         rect.h=rect.w;
-        window = SDL_CreateWindow("GAME OF LIFE", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000,
+        window = SDL_CreateWindow("CREATE GAME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 1000,
                                   (rect.h+2)*ynum, SDL_WINDOW_SHOWN);
         if (NULL == window)
         {
@@ -377,7 +402,7 @@ Node *Customer(int xnum, int ynum)
     else{
         rect.w=1000/ynum-2;
         rect.h=rect.w;
-        window = SDL_CreateWindow("GAME OF LIFE", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+        window = SDL_CreateWindow("CREATE GAME", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
                                   (rect.w+2)*xnum,1000, SDL_WINDOW_SHOWN);
         if (NULL == window)
         {
@@ -396,38 +421,45 @@ Node *Customer(int xnum, int ynum)
     x=0;
     y=0;
     Node *tempn, *tempn2;
-    bool pressed=false;
+    bool pressed=false, mc;
     tempn2=NULL;
     //draw the window for user pointing
     while(!quit) {
         print_Grid(head, &rect, renderer);
         while(SDL_PollEvent(&e)) {
+            //to ensure click can change color
             if (e.type == SDL_MOUSEBUTTONDOWN) {
                 x = e.motion.x;
                 y = e.motion.y;
                 tempn = getPosition(head, x / (rect.w + 2), y / (rect.w + 2));
                 if (tempn->this == 0) {
                     tempn->this = 1;
+                    mc=true;
                     print_Grid(head, &rect, renderer);
                 } else if (tempn->this == 1) {
                     tempn->this = 0;
+                    mc=false;
                     print_Grid(head, &rect, renderer);
                 }
                 tempn2=tempn;
+                //to change the state of mouse button to pressed
                 pressed=true;
             }
             else if(e.type==SDL_MOUSEBUTTONUP){
+                //change button state to unpressed
                 pressed=false;
             }
+            //to change color when mouse button pressed and also moving
             else if(e.type==SDL_MOUSEMOTION && pressed==true){
                 x = e.motion.x;
                 y = e.motion.y;
+                //change color just when it goes into new grid
                 tempn = getPosition(head, x / (rect.w + 2), y / (rect.w + 2));
                 if(tempn!=tempn2) {
-                    if (tempn->this == 0) {
+                    if (tempn->this == 0 && mc==true) {
                         tempn->this = 1;
                         print_Grid(head, &rect, renderer);
-                    } else if (tempn->this == 1) {
+                    } else if (tempn->this == 1 && mc==false) {
                         tempn->this = 0;
                         print_Grid(head, &rect, renderer);
                     }
