@@ -134,6 +134,10 @@ Node *copy_Grid(Node *last){
 Node *creat_Node(int type){
     Node *new=(Node*)malloc(sizeof (Node));
     new->this=type;
+    new->ynext=NULL;
+    new->xnext=NULL;
+    new->xlast=NULL;
+    new->ylast=NULL;
     return new;
 }
 

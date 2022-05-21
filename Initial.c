@@ -48,12 +48,13 @@ int load_Script(FILE *file, Node *head, int *delay){
                 j++;
                 last->xnext=NULL;
                 last=head;
-                for (i=0;i<j;i++){
+                while(1){
                     if(last->ynext==NULL){
                         this= creat_Node(-1);
                         last->ynext=this;
                         this->ylast=last;
                         last=this;
+                        break;
                     }
                     else{
                         last=last->ynext;
@@ -115,9 +116,16 @@ void clean_the_edge(Node *head){
     }
 }
 
+void free_node(Node *pointer){
+    if(pointer->xnext)pointer->xnext=NULL;
+    if(pointer->ynext)pointer->ynext=NULL;
+    if(pointer->ylast)pointer->ylast=NULL;
+    if(pointer->xlast)pointer->xlast=NULL;
+}
+
 int free_all(Node* head){
     if(!head->xnext&&!head->ynext){
-        free(head);
+        free_node(head);
         return 0;
     }
     Node *row, *this, *next;
@@ -128,11 +136,11 @@ int free_all(Node* head){
         while(1){
             if(this->xnext){
                 next=this->xnext;
-                free(this);
+                free_node(this);
                 this=next;
             }
             else{
-                free(this);
+                free_node(this);
                 break;
             }
         }
